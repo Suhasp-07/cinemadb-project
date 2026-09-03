@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Customers — CinemaDB</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="marquee">
+  <h1>Cinema<span>DB</span></h1>
+  <p>Live view of the box office database</p>
+</header>
+
+<nav class="tabs">
+  <a href="/index.html">Home</a>
+  <a href="/movies.html">Movies</a>
+  <a href="/theatres.html">Theatres</a>
+  <a href="/screens.html">Screens</a>
+  <a href="/shows.html">Shows</a>
+  <a href="/actors.html">Actors</a>
+  <a href="/directors.html">Directors</a>
+  <a href="/producers.html">Producers</a>
+  <a href="/customers.html" class="active">Customers</a>
+  <a href="/bookings.html">Bookings</a>
+  <a href="/payments.html">Payments</a>
+  <a href="/login.html" id="logout-link">Logout</a>
+</nav>
+
+<main>
+  <div class="panel-head">
+    <h2>Customers</h2>
+    <span class="count" id="count-customers"></span>
+  </div>
+  <div id="wrap-customers"></div>
+
+  <h3 style="margin-top:2rem; font-size:1.1rem;">Add customer</h3>
+  <form class="entry-form" id="customers-form">
+    <div class="field">
+      <label for="c-name">Customer name</label>
+      <input type="text" id="c-name"  required>
+    </div>
+    <div class="field">
+      <label for="c-phone">Phone</label>
+      <input type="tel" id="c-phone"  >
+    </div>
+    <div class="field">
+      <label for="c-email">Email</label>
+      <input type="email" id="c-email"  >
+    </div>
+    <div class="full">
+      <button type="submit">Add customer</button>
+    </div>
+    <div id="customers-feedback" class="form-feedback full"></div>
+  </form>
+</main>
+
+<script src="/js/auth.js"></script>
+<script src="/js/common.js"></script>
+<script>
+  function reloadCustomers() { loadTable("/api/customers", "wrap-customers", "count-customers"); }
+  reloadCustomers();
+
+  wireJsonForm({
+    formId: "customers-form",
+    endpoint: "/api/customers",
+    feedbackId: "customers-feedback",
+    fieldMap: {"Customer_Name": "c-name", "Phone": "c-phone", "Email": "c-email"},
+    reload: reloadCustomers
+  });
+</script>
+
+</body>
+</html>

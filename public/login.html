@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Login — CinemaDB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#141019;
+    --surface:#1E1826;
+    --line: rgba(242,239,233,0.14);
+    --paper:#F2EFE9;
+    --marquee:#E8B04B;
+    --stub:#C1443A;
+    --ok:#6FAE8C;
+    --radius: 3px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Inter', sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 1.5rem;
+  }
+  .ticket{
+    width: 100%;
+    max-width: 380px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow:hidden;
+  }
+  .ticket-top{
+    padding: 2rem 2rem 1.4rem;
+    text-align:center;
+    background:
+      repeating-linear-gradient(90deg, var(--marquee) 0 2px, transparent 2px 22px) top / 100% 6px no-repeat;
+  }
+  .ticket-top h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size: 2rem;
+    margin: 0.6rem 0 0.2rem;
+  }
+  .ticket-top h1 span{ color: var(--marquee); }
+  .ticket-top p{
+    margin:0;
+    font-size: 0.85rem;
+    color: rgba(242,239,233,0.55);
+  }
+  .perforation{
+    position:relative;
+    height: 1px;
+    background: var(--line);
+    margin: 0 1.5rem;
+  }
+  .perforation::before, .perforation::after{
+    content:"";
+    position:absolute;
+    top:-9px;
+    width:18px; height:18px;
+    background: var(--ink);
+    border-radius:50%;
+  }
+  .perforation::before{ left:-27px; }
+  .perforation::after{ right:-27px; }
+
+  form{
+    padding: 1.8rem 2rem 2rem;
+    display:flex;
+    flex-direction:column;
+    gap: 1.1rem;
+  }
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap: 0.4rem;
+  }
+  .field label{
+    font-size: 0.78rem;
+    color: rgba(242,239,233,0.6);
+  }
+  .field input{
+    background: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.65rem 0.8rem;
+    color: var(--paper);
+    font-family:'Inter', sans-serif;
+    font-size: 0.95rem;
+  }
+  .field input:focus{
+    outline: 2px solid var(--marquee);
+    outline-offset: 1px;
+  }
+  .btn-row{
+    display:flex;
+    gap: 0.7rem;
+    margin-top: 0.4rem;
+  }
+  button{
+    flex:1;
+    font-family:'Inter', sans-serif;
+    font-weight:700;
+    font-size: 0.9rem;
+    border-radius: var(--radius);
+    padding: 0.7rem;
+    cursor:pointer;
+    border: 1px solid transparent;
+  }
+  button[type="submit"]{
+    background: var(--marquee);
+    color: var(--ink);
+  }
+  button[type="submit"]:hover{ background: #f0c168; }
+  button[type="reset"]{
+    background: transparent;
+    color: var(--paper);
+    border-color: var(--line);
+  }
+  button[type="reset"]:hover{ border-color: var(--stub); color: var(--stub); }
+
+  #login-feedback{
+    font-size: 0.85rem;
+    min-height: 1.2em;
+  }
+  #login-feedback.ok{ color: var(--ok); }
+  #login-feedback.error{ color: var(--stub); }
+</style>
+</head>
+<body>
+
+<div class="ticket">
+  <div class="ticket-top">
+    <h1>Cinema<span>DB</span></h1>
+    <p>Sign in to continue</p>
+  </div>
+  <div class="perforation"></div>
+
+  <form id="login-form">
+    <div class="field">
+      <label for="username">Username</label>
+      <input type="text" id="username" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input type="password" id="password" autocomplete="current-password" required>
+    </div>
+
+    <div id="login-feedback"></div>
+
+    <div class="btn-row">
+      <button type="reset">Reset</button>
+      <button type="submit">Submit</button>
+    </div>
+  </form>
+</div>
+
+<script>
+const form = document.getElementById("login-form");
+const feedback = document.getElementById("login-feedback");
+
+form.addEventListener("reset", () => {
+  feedback.textContent = "";
+  feedback.className = "";
+});
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  feedback.className = "";
+  feedback.textContent = "Signing in…";
+
+  const Username = document.getElementById("username").value;
+  const Password = document.getElementById("password").value;
+
+  try {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ Username, Password })
+    });
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error || "Login failed");
+
+    feedback.textContent = "Login successful — redirecting…";
+    feedback.className = "ok";
+    sessionStorage.setItem("cinemadb_user", data.Username);
+    setTimeout(() => { window.location.href = "/index.html"; }, 600);
+  } catch (err) {
+    feedback.textContent = err.message;
+    feedback.className = "error";
+  }
+});
+</script>
+
+</body>
+</html>

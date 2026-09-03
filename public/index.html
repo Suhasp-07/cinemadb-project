@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CinemaDB — Box Office</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="marquee">
+  <h1>Cinema<span>DB</span></h1>
+  <p>Live view of the box office database</p>
+</header>
+
+<nav class="tabs">
+  <a href="/index.html" class="active">Home</a>
+  <a href="/movies.html">Movies</a>
+  <a href="/theatres.html">Theatres</a>
+  <a href="/screens.html">Screens</a>
+  <a href="/shows.html">Shows</a>
+  <a href="/actors.html">Actors</a>
+  <a href="/directors.html">Directors</a>
+  <a href="/producers.html">Producers</a>
+  <a href="/customers.html">Customers</a>
+  <a href="/bookings.html">Bookings</a>
+  <a href="/payments.html">Payments</a>
+  <a href="/login.html" id="logout-link">Logout</a>
+</nav>
+
+<main>
+  <div class="panel-head">
+    <h2>Welcome</h2>
+  </div>
+  <p style="color:rgba(242,239,233,0.75); max-width:60ch;">
+    This site reads directly from the CinemaDB MySQL database through the Express API.
+    Pick a section below to view its records.
+  </p>
+
+  <div class="link-grid">
+    <a class="link-card" href="/movies.html">
+      <h3>Movies</h3>
+      <p>Browse the film catalogue, with posters and cast &amp; crew.</p>
+    </a>
+    <a class="link-card" href="/theatres.html">
+      <h3>Theatres</h3>
+      <p>All registered theatre locations.</p>
+    </a>
+    <a class="link-card" href="/screens.html">
+      <h3>Screens</h3>
+      <p>Screens belonging to each theatre.</p>
+    </a>
+    <a class="link-card" href="/shows.html">
+      <h3>Shows</h3>
+      <p>Scheduled screenings by screen and theatre.</p>
+    </a>
+    <a class="link-card" href="/actors.html">
+      <h3>Actors</h3>
+      <p>Cast members across all movies.</p>
+    </a>
+    <a class="link-card" href="/directors.html">
+      <h3>Directors</h3>
+      <p>Directors linked to movies.</p>
+    </a>
+    <a class="link-card" href="/producers.html">
+      <h3>Producers</h3>
+      <p>Producers and their production houses.</p>
+    </a>
+    <a class="link-card" href="/customers.html">
+      <h3>Customers</h3>
+      <p>Registered customer records.</p>
+    </a>
+    <a class="link-card" href="/bookings.html">
+      <h3>Bookings</h3>
+      <p>View bookings and create a new one.</p>
+    </a>
+    <a class="link-card" href="/payments.html">
+      <h3>Payments</h3>
+      <p>Payment records linked to bookings.</p>
+    </a>
+  </div>
+</main>
+
+<script src="/js/auth.js"></script>
+
+</body>
+</html>

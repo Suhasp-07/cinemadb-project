@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shows — CinemaDB</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="marquee">
+  <h1>Cinema<span>DB</span></h1>
+  <p>Live view of the box office database</p>
+</header>
+
+<nav class="tabs">
+  <a href="/index.html">Home</a>
+  <a href="/movies.html">Movies</a>
+  <a href="/theatres.html">Theatres</a>
+  <a href="/screens.html">Screens</a>
+  <a href="/shows.html" class="active">Shows</a>
+  <a href="/actors.html">Actors</a>
+  <a href="/directors.html">Directors</a>
+  <a href="/producers.html">Producers</a>
+  <a href="/customers.html">Customers</a>
+  <a href="/bookings.html">Bookings</a>
+  <a href="/payments.html">Payments</a>
+  <a href="/login.html" id="logout-link">Logout</a>
+</nav>
+
+<main>
+  <div class="panel-head">
+    <h2>Shows</h2>
+    <span class="count" id="count-shows"></span>
+  </div>
+  <div id="wrap-shows"></div>
+
+  <h3 style="margin-top:2rem; font-size:1.1rem;">Add show</h3>
+  <form class="entry-form" id="shows-form">
+    <div class="field">
+      <label for="sh-date">Show date</label>
+      <input type="date" id="sh-date"  required>
+    </div>
+    <div class="field">
+      <label for="sh-time">Show time</label>
+      <input type="time" id="sh-time"  required>
+    </div>
+    <div class="field">
+      <label for="sh-movie">Movie ID</label>
+      <input type="number" id="sh-movie" min="1" required>
+    </div>
+    <div class="field">
+      <label for="sh-screen">Screen ID</label>
+      <input type="number" id="sh-screen" min="1" required>
+    </div>
+    <div class="full">
+      <button type="submit">Add show</button>
+    </div>
+    <div id="shows-feedback" class="form-feedback full"></div>
+  </form>
+</main>
+
+<script src="/js/auth.js"></script>
+<script src="/js/common.js"></script>
+<script>
+  function reloadShows() { loadTable("/api/shows", "wrap-shows", "count-shows"); }
+  reloadShows();
+
+  wireJsonForm({
+    formId: "shows-form",
+    endpoint: "/api/shows",
+    feedbackId: "shows-feedback",
+    fieldMap: {"Show_Date": "sh-date", "Show_Time": "sh-time", "Movie_ID": "sh-movie", "Screen_ID": "sh-screen"},
+    reload: reloadShows
+  });
+</script>
+
+</body>
+</html>

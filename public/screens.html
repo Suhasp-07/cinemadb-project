@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Screens — CinemaDB</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="marquee">
+  <h1>Cinema<span>DB</span></h1>
+  <p>Live view of the box office database</p>
+</header>
+
+<nav class="tabs">
+  <a href="/index.html">Home</a>
+  <a href="/movies.html">Movies</a>
+  <a href="/theatres.html">Theatres</a>
+  <a href="/screens.html" class="active">Screens</a>
+  <a href="/shows.html">Shows</a>
+  <a href="/actors.html">Actors</a>
+  <a href="/directors.html">Directors</a>
+  <a href="/producers.html">Producers</a>
+  <a href="/customers.html">Customers</a>
+  <a href="/bookings.html">Bookings</a>
+  <a href="/payments.html">Payments</a>
+  <a href="/login.html" id="logout-link">Logout</a>
+</nav>
+
+<main>
+  <div class="panel-head">
+    <h2>Screens</h2>
+    <span class="count" id="count-screens"></span>
+  </div>
+  <div id="wrap-screens"></div>
+
+  <h3 style="margin-top:2rem; font-size:1.1rem;">Add screen</h3>
+  <form class="entry-form" id="screens-form">
+    <div class="field">
+      <label for="s-name">Screen name</label>
+      <input type="text" id="s-name" placeholder="e.g. Screen 1" required>
+    </div>
+    <div class="field">
+      <label for="s-capacity">Capacity</label>
+      <input type="number" id="s-capacity" min="1" >
+    </div>
+    <div class="field">
+      <label for="s-theatre">Theatre ID</label>
+      <input type="number" id="s-theatre" min="1" required>
+    </div>
+    <div class="full">
+      <button type="submit">Add screen</button>
+    </div>
+    <div id="screens-feedback" class="form-feedback full"></div>
+  </form>
+</main>
+
+<script src="/js/auth.js"></script>
+<script src="/js/common.js"></script>
+<script>
+  function reloadScreens() { loadTable("/api/screens", "wrap-screens", "count-screens"); }
+  reloadScreens();
+
+  wireJsonForm({
+    formId: "screens-form",
+    endpoint: "/api/screens",
+    feedbackId: "screens-feedback",
+    fieldMap: {"Screen_Name": "s-name", "Capacity": "s-capacity", "Theatre_ID": "s-theatre"},
+    reload: reloadScreens
+  });
+</script>
+
+</body>
+</html>

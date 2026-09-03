@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Actors — CinemaDB</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="marquee">
+  <h1>Cinema<span>DB</span></h1>
+  <p>Live view of the box office database</p>
+</header>
+
+<nav class="tabs">
+  <a href="/index.html">Home</a>
+  <a href="/movies.html">Movies</a>
+  <a href="/theatres.html">Theatres</a>
+  <a href="/screens.html">Screens</a>
+  <a href="/shows.html">Shows</a>
+  <a href="/actors.html" class="active">Actors</a>
+  <a href="/directors.html">Directors</a>
+  <a href="/producers.html">Producers</a>
+  <a href="/customers.html">Customers</a>
+  <a href="/bookings.html">Bookings</a>
+  <a href="/payments.html">Payments</a>
+  <a href="/login.html" id="logout-link">Logout</a>
+</nav>
+
+<main>
+  <div class="panel-head">
+    <h2>Actors</h2>
+    <span class="count" id="count-actors"></span>
+  </div>
+  <div id="wrap-actors"></div>
+
+  <h3 style="margin-top:2rem; font-size:1.1rem;">Add actor</h3>
+  <form class="entry-form" id="actors-form">
+    <div class="field">
+      <label for="a-name">Actor name</label>
+      <input type="text" id="a-name"  required>
+    </div>
+    <div class="field">
+      <label for="a-dob">Date of birth</label>
+      <input type="date" id="a-dob"  >
+    </div>
+    <div class="field">
+      <label for="a-gender">Gender</label>
+      <select id="a-gender" ><option value="">Select…</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select>
+    </div>
+    <div class="field">
+      <label for="a-nationality">Nationality</label>
+      <input type="text" id="a-nationality"  >
+    </div>
+    <div class="full">
+      <button type="submit">Add actor</button>
+    </div>
+    <div id="actors-feedback" class="form-feedback full"></div>
+  </form>
+</main>
+
+<script src="/js/auth.js"></script>
+<script src="/js/common.js"></script>
+<script>
+  function reloadActors() { loadTable("/api/actors", "wrap-actors", "count-actors"); }
+  reloadActors();
+
+  wireJsonForm({
+    formId: "actors-form",
+    endpoint: "/api/actors",
+    feedbackId: "actors-feedback",
+    fieldMap: {"Actor_Name": "a-name", "DOB": "a-dob", "Gender": "a-gender", "Nationality": "a-nationality"},
+    reload: reloadActors
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bookings — CinemaDB</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="marquee">
+  <h1>Cinema<span>DB</span></h1>
+  <p>Live view of the box office database</p>
+</header>
+
+<nav class="tabs">
+  <a href="/index.html">Home</a>
+  <a href="/movies.html">Movies</a>
+  <a href="/theatres.html">Theatres</a>
+  <a href="/screens.html">Screens</a>
+  <a href="/shows.html">Shows</a>
+  <a href="/actors.html">Actors</a>
+  <a href="/directors.html">Directors</a>
+  <a href="/producers.html">Producers</a>
+  <a href="/customers.html">Customers</a>
+  <a href="/bookings.html" class="active">Bookings</a>
+  <a href="/payments.html">Payments</a>
+  <a href="/login.html" id="logout-link">Logout</a>
+</nav>
+
+<main>
+  <div class="panel-head">
+    <h2>Bookings</h2>
+    <span class="count" id="count-bookings"></span>
+  </div>
+  <div id="wrap-bookings"></div>
+
+  <h3 style="margin-top:2rem; font-size:1.1rem;">New booking</h3>
+  <form class="entry-form" id="booking-form">
+    <div class="field">
+      <label for="b-date">Booking date</label>
+      <input type="date" id="b-date" required>
+    </div>
+    <div class="field">
+      <label for="b-seats">Seats booked</label>
+      <input type="number" id="b-seats" min="1" required>
+    </div>
+    <div class="field">
+      <label for="b-customer">Customer ID</label>
+      <input type="number" id="b-customer" required>
+    </div>
+    <div class="field">
+      <label for="b-show">Show ID</label>
+      <input type="number" id="b-show" required>
+    </div>
+    <div class="full">
+      <button type="submit">Book seats</button>
+    </div>
+    <div id="booking-feedback" class="form-feedback full"></div>
+  </form>
+</main>
+
+<script src="/js/auth.js"></script>
+<script src="/js/common.js"></script>
+<script>
+  loadTable("/api/bookings", "wrap-bookings", "count-bookings");
+
+  document.getElementById("booking-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const feedback = document.getElementById("booking-feedback");
+    feedback.className = "form-feedback full";
+    feedback.textContent = "Submitting…";
+
+    const payload = {
+      Booking_Date: document.getElementById("b-date").value,
+      Seats_Booked: Number(document.getElementById("b-seats").value),
+      Customer_ID: Number(document.getElementById("b-customer").value),
+      Show_ID: Number(document.getElementById("b-show").value),
+    };
+
+    try{
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Booking failed");
+
+      feedback.textContent = `Booked! Booking ID ${data.Booking_ID}.`;
+      feedback.className = "form-feedback full ok";
+      e.target.reset();
+      loadTable("/api/bookings", "wrap-bookings", "count-bookings");
+    }catch(err){
+      feedback.textContent = err.message;
+      feedback.className = "form-feedback full error";
+    }
+  });
+</script>
+
+</body>
+</html>

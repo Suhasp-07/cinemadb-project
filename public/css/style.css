@@ -1,0 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --ink:#141019;
+  --surface:#1E1826;
+  --surface-2:#271F32;
+  --line: rgba(242,239,233,0.14);
+  --paper:#F2EFE9;
+  --marquee:#E8B04B;
+  --stub:#C1443A;
+  --ok:#6FAE8C;
+  --radius: 3px;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--paper);
+  font-family:'Inter', sans-serif;
+  line-height:1.5;
+}
+h1,h2,h3{
+  font-family:'Fraunces', serif;
+  font-weight:600;
+  margin:0;
+}
+
+/* Marquee header */
+header.marquee{
+  padding: 2.2rem 2rem 1.8rem;
+  background:
+    repeating-linear-gradient(90deg, var(--marquee) 0 2px, transparent 2px 22px) top / 100% 6px no-repeat,
+    var(--surface);
+  border-bottom: 1px solid var(--line);
+  text-align:center;
+}
+header.marquee a.brand{
+  text-decoration:none;
+}
+header.marquee h1{
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  letter-spacing: 0.01em;
+  color: var(--paper);
+}
+header.marquee h1 span{ color: var(--marquee); }
+header.marquee p{
+  margin-top:0.4rem;
+  color: rgba(242,239,233,0.6);
+  font-size: 0.9rem;
+}
+
+/* Nav bar shared across pages */
+nav.tabs{
+  display:flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content:center;
+  padding: 1.2rem 1rem 0;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+nav.tabs a{
+  font-family:'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight:600;
+  color: var(--paper);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.55rem 1.1rem;
+  cursor:pointer;
+  text-decoration:none;
+  position:relative;
+}
+nav.tabs a::after{
+  content:"";
+  position:absolute;
+  right:-4px; top:50%; transform:translateY(-50%);
+  width:8px; height:8px; border-radius:50%;
+  background: var(--ink);
+  border: 1px solid var(--line);
+}
+nav.tabs a:last-child::after{ display:none; }
+nav.tabs a.active{
+  background: var(--stub);
+  border-color: var(--stub);
+  color: var(--paper);
+}
+
+main{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.panel-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.6rem;
+}
+.panel-head h2{ font-size: 1.6rem; }
+.panel-head .count{
+  font-size: 0.8rem;
+  color: rgba(242,239,233,0.55);
+}
+
+table{
+  width:100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+thead th{
+  text-align:left;
+  font-weight:600;
+  color: var(--marquee);
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+tbody td{
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid rgba(242,239,233,0.06);
+  color: rgba(242,239,233,0.9);
+}
+tbody tr:hover{ background: rgba(232,176,74,0.05); }
+
+.state-msg{
+  padding: 2rem 0;
+  text-align:center;
+  color: rgba(242,239,233,0.5);
+  font-size: 0.9rem;
+}
+.state-msg.error{ color: var(--stub); }
+
+/* Booking / payment forms — ticket stub card */
+form.entry-form{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-top: 1rem;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+form.entry-form .field{
+  display:flex;
+  flex-direction:column;
+  gap: 0.35rem;
+}
+form.entry-form label{
+  font-size: 0.78rem;
+  color: rgba(242,239,233,0.6);
+}
+form.entry-form input, form.entry-form select{
+  background: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.55rem 0.7rem;
+  color: var(--paper);
+  font-family:'Inter', sans-serif;
+  font-size: 0.9rem;
+}
+form.entry-form input:focus, form.entry-form select:focus{
+  outline: 2px solid var(--marquee);
+  outline-offset: 1px;
+}
+form.entry-form .full{ grid-column: 1 / -1; }
+form.entry-form button{
+  justify-self: start;
+  background: var(--marquee);
+  color: var(--ink);
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.65rem 1.4rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor:pointer;
+  font-family:'Inter', sans-serif;
+}
+form.entry-form button:hover{ background: #f0c168; }
+.form-feedback{
+  grid-column: 1/-1;
+  font-size: 0.85rem;
+  padding: 0.5rem 0;
+}
+.form-feedback.ok{ color: var(--ok); }
+.form-feedback.error{ color: var(--stub); }
+
+/* Home page link cards */
+.link-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.link-card{
+  display:block;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.4rem;
+  text-decoration:none;
+  color: var(--paper);
+}
+.link-card:hover{ border-color: var(--marquee); }
+.link-card h3{ font-size: 1.15rem; margin-bottom: 0.4rem; }
+.link-card p{
+  margin:0;
+  font-size: 0.85rem;
+  color: rgba(242,239,233,0.6);
+}
+
+@media (max-width: 640px){
+  form.entry-form{ grid-template-columns: 1fr; }
+  nav.tabs{ justify-content:flex-start; overflow-x:auto; padding-bottom:0.5rem; }
+}

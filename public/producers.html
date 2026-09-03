@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Producers — CinemaDB</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="marquee">
+  <h1>Cinema<span>DB</span></h1>
+  <p>Live view of the box office database</p>
+</header>
+
+<nav class="tabs">
+  <a href="/index.html">Home</a>
+  <a href="/movies.html">Movies</a>
+  <a href="/theatres.html">Theatres</a>
+  <a href="/screens.html">Screens</a>
+  <a href="/shows.html">Shows</a>
+  <a href="/actors.html">Actors</a>
+  <a href="/directors.html">Directors</a>
+  <a href="/producers.html" class="active">Producers</a>
+  <a href="/customers.html">Customers</a>
+  <a href="/bookings.html">Bookings</a>
+  <a href="/payments.html">Payments</a>
+  <a href="/login.html" id="logout-link">Logout</a>
+</nav>
+
+<main>
+  <div class="panel-head">
+    <h2>Producers</h2>
+    <span class="count" id="count-producers"></span>
+  </div>
+  <div id="wrap-producers"></div>
+
+  <h3 style="margin-top:2rem; font-size:1.1rem;">Add producer</h3>
+  <form class="entry-form" id="producers-form">
+    <div class="field">
+      <label for="p-name">Producer name</label>
+      <input type="text" id="p-name"  required>
+    </div>
+    <div class="field">
+      <label for="p-house">Production house</label>
+      <input type="text" id="p-house"  >
+    </div>
+    <div class="full">
+      <button type="submit">Add producer</button>
+    </div>
+    <div id="producers-feedback" class="form-feedback full"></div>
+  </form>
+</main>
+
+<script src="/js/auth.js"></script>
+<script src="/js/common.js"></script>
+<script>
+  function reloadProducers() { loadTable("/api/producers", "wrap-producers", "count-producers"); }
+  reloadProducers();
+
+  wireJsonForm({
+    formId: "producers-form",
+    endpoint: "/api/producers",
+    feedbackId: "producers-feedback",
+    fieldMap: {"Producer_Name": "p-name", "Production_House": "p-house"},
+    reload: reloadProducers
+  });
+</script>
+
+</body>
+</html>

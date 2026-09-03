@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Movies — CinemaDB</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .movie-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.2rem;
+  }
+  .movie-card{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow:hidden;
+    cursor:pointer;
+  }
+  .movie-card img{
+    width:100%;
+    display:block;
+    aspect-ratio: 2/3;
+    object-fit:cover;
+    background: var(--ink);
+  }
+  .movie-card .info{ padding: 0.7rem 0.8rem; }
+  .movie-card h3{
+    font-size: 0.95rem;
+    margin: 0 0 0.2rem;
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+  }
+  .movie-card p{
+    margin:0;
+    font-size: 0.78rem;
+    color: rgba(242,239,233,0.55);
+  }
+
+  .details-panel{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.4rem;
+    margin-top: 1.5rem;
+    display:none;
+  }
+  .details-panel.open{ display:block; }
+  .details-panel h3{ font-size: 1.2rem; margin-bottom: 0.3rem; }
+  .details-panel .meta{
+    font-size: 0.85rem;
+    color: rgba(242,239,233,0.6);
+    margin-bottom: 1rem;
+  }
+  .details-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.2rem;
+  }
+  .details-grid h4{
+    font-size: 0.8rem;
+    text-transform:uppercase;
+    letter-spacing: 0.04em;
+    color: var(--marquee);
+    margin: 0 0 0.5rem;
+  }
+  .details-grid ul{
+    list-style:none;
+    margin:0; padding:0;
+    font-size: 0.88rem;
+    display:flex;
+    flex-direction:column;
+    gap: 0.35rem;
+  }
+  .details-grid li{ color: rgba(242,239,233,0.85); }
+  .details-grid .empty{ color: rgba(242,239,233,0.4); font-style:italic; }
+</style>
+</head>
+<body>
+
+<header class="marquee">
+  <h1>Cinema<span>DB</span></h1>
+  <p>Live view of the box office database</p>
+</header>
+
+<nav class="tabs">
+  <a href="/index.html">Home</a>
+  <a href="/movies.html" class="active">Movies</a>
+  <a href="/theatres.html">Theatres</a>
+  <a href="/screens.html">Screens</a>
+  <a href="/shows.html">Shows</a>
+  <a href="/actors.html">Actors</a>
+  <a href="/directors.html">Directors</a>
+  <a href="/producers.html">Producers</a>
+  <a href="/customers.html">Customers</a>
+  <a href="/bookings.html">Bookings</a>
+  <a href="/payments.html">Payments</a>
+  <a href="/login.html" id="logout-link">Logout</a>
+</nav>
+
+<main>
+  <div class="panel-head">
+    <h2>Movies</h2>
+    <span class="count" id="count-movies"></span>
+  </div>
+  <div id="wrap-movies"></div>
+
+  <div class="details-panel" id="details-panel">
+    <h3 id="details-title"></h3>
+    <p class="meta" id="details-meta"></p>
+    <div class="details-grid">
+      <div>
+        <h4>Cast</h4>
+        <ul id="details-cast"></ul>
+      </div>
+      <div>
+        <h4>Director</h4>
+        <ul id="details-directors"></ul>
+      </div>
+      <div>
+        <h4>Producer</h4>
+        <ul id="details-producers"></ul>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:2rem; font-size:1.1rem;">Add movie</h3>
+  <form class="entry-form" id="movie-form" enctype="multipart/form-data">
+    <div class="field">
+      <label for="m-title">Title</label>
+      <input type="text" id="m-title" required>
+    </div>
+    <div class="field">
+      <label for="m-genre">Genre</label>
+      <input type="text" id="m-genre" placeholder="e.g. Action">
+    </div>
+    <div class="field">
+      <label for="m-language">Language</label>
+      <input type="text" id="m-language" placeholder="e.g. Hindi">
+    </div>
+    <div class="field">
+      <label for="m-duration">Duration (minutes)</label>
+      <input type="number" id="m-duration" min="1">
+    </div>
+    <div class="field">
+      <label for="m-release">Release date</label>
+      <input type="date" id="m-release">
+    </div>
+    <div class="field">
+      <label for="m-budget">Budget</label>
+      <input type="number" id="m-budget" step="0.01" min="0">
+    </div>
+    <div class="field">
+      <label for="m-collections">Box office collections</label>
+      <input type="number" id="m-collections" step="0.01" min="0">
+    </div>
+    <div class="field">
+      <label for="m-poster">Poster image (jpg/png/webp, max 5MB)</label>
+      <input type="file" id="m-poster" accept=".jpg,.jpeg,.png,.webp">
+    </div>
+    <div class="full">
+      <button type="submit">Add movie</button>
+    </div>
+    <div id="movie-feedback" class="form-feedback full"></div>
+  </form>
+</main>
+
+<script src="/js/auth.js"></script>
+<script>
+async function loadMovies() {
+  const wrap = document.getElementById("wrap-movies");
+  const countEl = document.getElementById("count-movies");
+  wrap.innerHTML = `<div class="state-msg">Loading…</div>`;
+  try {
+    const res = await fetch("/api/movies");
+    if (!res.ok) throw new Error("Server responded with " + res.status);
+    const movies = await res.json();
+    countEl.textContent = `${movies.length} record${movies.length === 1 ? "" : "s"}`;
+
+    if (!movies.length) {
+      wrap.innerHTML = `<div class="state-msg">No movies found.</div>`;
+      return;
+    }
+
+    wrap.innerHTML = `<div class="movie-grid">${movies.map(m => `
+      <div class="movie-card" data-id="${m.Movie_ID}">
+        <img src="${m.Poster || ''}" alt="${m.Title}" onerror="this.style.opacity=0.15">
+        <div class="info">
+          <h3>${m.Title}</h3>
+          <p>${m.Genre || ''} · ${m.Language || ''}</p>
+        </div>
+      </div>
+    `).join("")}</div>`;
+
+    document.querySelectorAll(".movie-card").forEach(card => {
+      card.addEventListener("click", () => showDetails(card.dataset.id, movies));
+    });
+  } catch (err) {
+    wrap.innerHTML = `<div class="state-msg error">Couldn't load movies. Is the server running? (${err.message})</div>`;
+  }
+}
+
+function fillList(id, items, render, emptyText) {
+  const el = document.getElementById(id);
+  if (!items.length) {
+    el.innerHTML = `<li class="empty">${emptyText}</li>`;
+    return;
+  }
+  el.innerHTML = items.map(render).join("");
+}
+
+async function showDetails(movieId, movies) {
+  const movie = movies.find(m => String(m.Movie_ID) === String(movieId));
+  const panel = document.getElementById("details-panel");
+  panel.classList.add("open");
+  document.getElementById("details-title").textContent = movie.Title;
+  document.getElementById("details-meta").textContent =
+    `${movie.Genre || ''} · ${movie.Language || ''} · ${movie.Duration ? movie.Duration + ' min' : ''}`;
+
+  fillList("details-cast", [], () => "", "Loading…");
+  fillList("details-directors", [], () => "", "Loading…");
+  fillList("details-producers", [], () => "", "Loading…");
+
+  try {
+    const [castRes, dirRes, prodRes] = await Promise.all([
+      fetch(`/api/movies/${movieId}/cast`),
+      fetch(`/api/movies/${movieId}/directors`),
+      fetch(`/api/movies/${movieId}/producers`)
+    ]);
+    const [cast, directors, producers] = await Promise.all([castRes.json(), dirRes.json(), prodRes.json()]);
+
+    fillList("details-cast", cast, c => `<li>${c.Actor_Name}${c.Role_Name ? ` — ${c.Role_Name}` : ''}</li>`, "No cast recorded yet.");
+    fillList("details-directors", directors, d => `<li>${d.Director_Name}</li>`, "No director recorded yet.");
+    fillList("details-producers", producers, p => `<li>${p.Producer_Name}${p.Production_House ? ` (${p.Production_House})` : ''}</li>`, "No producer recorded yet.");
+  } catch (err) {
+    fillList("details-cast", [], () => "", "Couldn't load.");
+  }
+
+  panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+loadMovies();
+
+document.getElementById("movie-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const feedback = document.getElementById("movie-feedback");
+  feedback.className = "form-feedback full";
+  feedback.textContent = "Submitting…";
+
+  const formData = new FormData();
+  const fields = {
+    Title: "m-title", Genre: "m-genre", Language: "m-language",
+    Duration: "m-duration", Release_Date: "m-release",
+    Budget: "m-budget", Box_Office_Collections: "m-collections"
+  };
+  for (const [key, id] of Object.entries(fields)) {
+    const val = document.getElementById(id).value;
+    if (val !== "") formData.append(key, val);
+  }
+  const posterFile = document.getElementById("m-poster").files[0];
+  if (posterFile) formData.append("poster", posterFile);
+
+  try {
+    const res = await fetch("/api/movies", { method: "POST", body: formData });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to add movie");
+
+    feedback.textContent = `Added! Movie ID ${data.Movie_ID}.`;
+    feedback.className = "form-feedback full ok";
+    e.target.reset();
+    loadMovies();
+  } catch (err) {
+    feedback.textContent = err.message;
+    feedback.className = "form-feedback full error";
+  }
+});
+</script>
+
+</body>
+</html>

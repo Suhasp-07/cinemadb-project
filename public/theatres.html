@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Theatres — CinemaDB</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="marquee">
+  <h1>Cinema<span>DB</span></h1>
+  <p>Live view of the box office database</p>
+</header>
+
+<nav class="tabs">
+  <a href="/index.html">Home</a>
+  <a href="/movies.html">Movies</a>
+  <a href="/theatres.html" class="active">Theatres</a>
+  <a href="/screens.html">Screens</a>
+  <a href="/shows.html">Shows</a>
+  <a href="/actors.html">Actors</a>
+  <a href="/directors.html">Directors</a>
+  <a href="/producers.html">Producers</a>
+  <a href="/customers.html">Customers</a>
+  <a href="/bookings.html">Bookings</a>
+  <a href="/payments.html">Payments</a>
+  <a href="/login.html" id="logout-link">Logout</a>
+</nav>
+
+<main>
+  <div class="panel-head">
+    <h2>Theatres</h2>
+    <span class="count" id="count-theatres"></span>
+  </div>
+  <div id="wrap-theatres"></div>
+
+  <h3 style="margin-top:2rem; font-size:1.1rem;">Add theatre</h3>
+  <form class="entry-form" id="theatres-form">
+    <div class="field">
+      <label for="t-name">Theatre name</label>
+      <input type="text" id="t-name" placeholder="e.g. PVR Forum Mall" required>
+    </div>
+    <div class="field">
+      <label for="t-location">Location</label>
+      <input type="text" id="t-location" placeholder="e.g. Koramangala, Bengaluru" >
+    </div>
+    <div class="field">
+      <label for="t-contact">Contact number</label>
+      <input type="text" id="t-contact"  >
+    </div>
+    <div class="full">
+      <button type="submit">Add theatre</button>
+    </div>
+    <div id="theatres-feedback" class="form-feedback full"></div>
+  </form>
+</main>
+
+<script src="/js/auth.js"></script>
+<script src="/js/common.js"></script>
+<script>
+  function reloadTheatres() { loadTable("/api/theatres", "wrap-theatres", "count-theatres"); }
+  reloadTheatres();
+
+  wireJsonForm({
+    formId: "theatres-form",
+    endpoint: "/api/theatres",
+    feedbackId: "theatres-feedback",
+    fieldMap: {"Theatre_Name": "t-name", "Location": "t-location", "Contact_No": "t-contact"},
+    reload: reloadTheatres
+  });
+</script>
+
+</body>
+</html>

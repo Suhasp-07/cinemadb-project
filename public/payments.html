@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Payments — CinemaDB</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="marquee">
+  <h1>Cinema<span>DB</span></h1>
+  <p>Live view of the box office database</p>
+</header>
+
+<nav class="tabs">
+  <a href="/index.html">Home</a>
+  <a href="/movies.html">Movies</a>
+  <a href="/theatres.html">Theatres</a>
+  <a href="/screens.html">Screens</a>
+  <a href="/shows.html">Shows</a>
+  <a href="/actors.html">Actors</a>
+  <a href="/directors.html">Directors</a>
+  <a href="/producers.html">Producers</a>
+  <a href="/customers.html">Customers</a>
+  <a href="/bookings.html">Bookings</a>
+  <a href="/payments.html" class="active">Payments</a>
+  <a href="/login.html" id="logout-link">Logout</a>
+</nav>
+
+<main>
+  <div class="panel-head">
+    <h2>Payments</h2>
+    <span class="count" id="count-payments"></span>
+  </div>
+  <div id="wrap-payments"></div>
+
+  <h3 style="margin-top:2rem; font-size:1.1rem;">New payment</h3>
+  <form class="entry-form" id="payment-form">
+    <div class="field">
+      <label for="p-amount">Amount</label>
+      <input type="number" id="p-amount" step="0.01" min="0" required>
+    </div>
+    <div class="field">
+      <label for="p-mode">Payment mode</label>
+      <select id="p-mode" required>
+        <option value="">Select…</option>
+        <option value="Card">Card</option>
+        <option value="UPI">UPI</option>
+        <option value="Cash">Cash</option>
+        <option value="Net Banking">Net Banking</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="p-date">Payment date</label>
+      <input type="date" id="p-date" required>
+    </div>
+    <div class="field">
+      <label for="p-booking">Booking ID</label>
+      <input type="number" id="p-booking" required>
+    </div>
+    <div class="full">
+      <button type="submit">Record payment</button>
+    </div>
+    <div id="payment-feedback" class="form-feedback full"></div>
+  </form>
+</main>
+
+<script src="/js/auth.js"></script>
+<script src="/js/common.js"></script>
+<script>
+  loadTable("/api/payments", "wrap-payments", "count-payments");
+
+  document.getElementById("payment-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const feedback = document.getElementById("payment-feedback");
+    feedback.className = "form-feedback full";
+    feedback.textContent = "Submitting…";
+
+    const payload = {
+      Amount: Number(document.getElementById("p-amount").value),
+      Payment_Mode: document.getElementById("p-mode").value,
+      Payment_Date: document.getElementById("p-date").value,
+      Booking_ID: Number(document.getElementById("p-booking").value),
+    };
+
+    try{
+      const res = await fetch("/api/payments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Payment failed");
+
+      feedback.textContent = `Recorded! Payment ID ${data.Payment_ID}.`;
+      feedback.className = "form-feedback full ok";
+      e.target.reset();
+      loadTable("/api/payments", "wrap-payments", "count-payments");
+    }catch(err){
+      feedback.textContent = err.message;
+      feedback.className = "form-feedback full error";
+    }
+  });
+</script>
+
+</body>
+</html>
