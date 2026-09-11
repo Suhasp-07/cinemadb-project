@@ -28,14 +28,68 @@
     align-items:center;
     justify-content:center;
     padding: 1.5rem;
+    position:relative;
+    overflow:hidden;
+  }
+  .backdrop{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    display:grid;
+    grid-template-columns: repeat(8, 1fr);
+    filter: blur(6px) saturate(1.2);
+    opacity:0.55;
+  }
+  .backdrop img{
+    width:100%; height:100%;
+    object-fit:cover;
+    animation: driftSlow 26s ease-in-out infinite alternate;
+  }
+  .backdrop img:nth-child(even){ animation-duration: 32s; }
+  @keyframes driftSlow{
+    from{ transform: scale(1.1) translateY(0); }
+    to  { transform: scale(1.22) translateY(-2%); }
+  }
+  .scrim{
+    position:fixed; inset:0; z-index:1;
+    background:
+      radial-gradient(ellipse 620px 520px at 50% 46%, rgba(20,16,25,0.35) 0%, rgba(20,16,25,0.88) 62%, var(--ink) 100%);
+  }
+  /* Colourful floating light accents around the card, like marquee bulbs
+     scattered in the dark — adds colour beyond just the poster backdrop */
+  .glow-ring{
+    position:fixed; z-index:1; border-radius:50%;
+    filter: blur(60px); opacity:0.35; pointer-events:none;
+    animation: driftBlob 22s ease-in-out infinite alternate;
+  }
+  .glow-ring.g1{ width:260px; height:260px; background:#E8B04B; top:8%; left:12%; }
+  .glow-ring.g2{ width:220px; height:220px; background:#D97BC9; bottom:10%; right:10%; animation-duration:28s; }
+  .glow-ring.g3{ width:180px; height:180px; background:#4FB6C4; bottom:18%; left:8%; animation-duration:19s; }
+  @keyframes driftBlob{
+    from{ transform: translate(0,0) scale(1); }
+    to  { transform: translate(4%, 5%) scale(1.15); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .glow-ring{ animation:none; }
+  }
+  @keyframes cardIn{
+    from{ opacity:0; transform: translateY(14px) scale(0.98); }
+    to  { opacity:1; transform: translateY(0) scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .backdrop img{ animation:none; }
   }
   .ticket{
+    position:relative;
+    z-index:2;
     width: 100%;
     max-width: 380px;
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius);
     overflow:hidden;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.55);
+    animation: cardIn 0.5s ease;
   }
   .ticket-top{
     padding: 2rem 2rem 1.4rem;
@@ -133,12 +187,186 @@
   }
   #login-feedback.ok{ color: var(--ok); }
   #login-feedback.error{ color: var(--stub); }
+
+  /* ---------- Chasing marquee bulbs ---------- */
+  @keyframes bulbChase{
+    from{ background-position-x: 0; }
+    to  { background-position-x: 26px; }
+  }
+  .ticket-top{
+    background: none;
+    position:relative;
+  }
+  .ticket-top .bulb-strip{
+    position:absolute; top:0; left:0; right:0; height:8px;
+    background:
+      repeating-radial-gradient(circle, var(--marquee) 0 2.4px, transparent 2.8px 26px) left / 26px 8px repeat-x;
+    filter: drop-shadow(0 0 4px rgba(232,176,74,0.85));
+    animation: bulbChase 1s linear infinite;
+  }
+
+  /* ---------- Curtain transition ---------- */
+  .curtain{
+    position:fixed; inset:0; z-index:200;
+    display:flex;
+    pointer-events:none;
+  }
+  .curtain .panel{
+    flex:1 1 50%;
+    background:
+      repeating-linear-gradient(90deg, rgba(0,0,0,0.22) 0 16px, rgba(0,0,0,0.02) 16px 32px),
+      linear-gradient(180deg, #8a1c28 0%, #5a0f18 55%, #2c0810 100%);
+    box-shadow: inset 0 0 90px rgba(0,0,0,0.65);
+    transition: transform 0.8s cubic-bezier(.65,0,.35,1);
+  }
+  .curtain .panel.left{
+    transform: translateX(-100%);
+    border-right: 3px solid rgba(232,176,74,0.55);
+  }
+  .curtain .panel.right{
+    transform: translateX(100%);
+    border-left: 3px solid rgba(232,176,74,0.55);
+  }
+  .curtain.closed .panel.left{ transform: translateX(0); }
+  .curtain.closed .panel.right{ transform: translateX(0); }
+  @media (prefers-reduced-motion: reduce){
+    .curtain .panel{ transition:none; }
+    .ticket-top .bulb-strip{ animation:none; }
+  }
+
+  /* ---------- Floating theatre props ---------- */
+  .prop-field{ position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
+  .prop{ position:absolute; opacity:0.55; animation: floatProp 13s ease-in-out infinite; }
+  .prop svg{ width:100%; height:auto; display:block; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5)); }
+  @keyframes floatProp{
+    0%, 100%{ transform: translateY(0) rotate(var(--rot, 0deg)); }
+    50%     { transform: translateY(-16px) rotate(calc(var(--rot, 0deg) + 5deg)); }
+  }
+  @media (prefers-reduced-motion: reduce){ .prop{ animation:none; } }
+  @media (max-width: 900px){ .prop.edge-only{ display:none; } }
 </style>
 </head>
 <body>
 
+<div class="curtain" id="curtain">
+  <div class="panel left"></div>
+  <div class="panel right"></div>
+</div>
+
+<div class="prop-field">
+  <div class="prop edge-only" style="top:8%; left:1%; width:150px; --rot:-8deg;">
+    <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="popKernel1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fff6d8"/><stop offset="100%" stop-color="#e8c46a"/>
+        </linearGradient>
+        <linearGradient id="popBucket1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#e8453a"/><stop offset="100%" stop-color="#a8241d"/>
+        </linearGradient>
+      </defs>
+      <path d="M20 55 L80 55 L72 125 L28 125 Z" fill="url(#popBucket1)"/>
+      <path d="M32 55 L38 125 L48 125 L44 55 Z" fill="#F2EFE9" opacity="0.92"/>
+      <path d="M56 55 L60 125 L70 125 L64 55 Z" fill="#F2EFE9" opacity="0.92"/>
+      <circle cx="30" cy="50" r="14" fill="url(#popKernel1)"/>
+      <circle cx="50" cy="36" r="18" fill="url(#popKernel1)"/>
+      <circle cx="70" cy="50" r="14" fill="url(#popKernel1)"/>
+      <circle cx="40" cy="55" r="12" fill="url(#popKernel1)"/>
+      <circle cx="60" cy="55" r="12" fill="url(#popKernel1)"/>
+      <circle cx="50" cy="59" r="10" fill="url(#popKernel1)"/>
+    </svg>
+  </div>
+
+  <div class="prop edge-only" style="top:56%; left:1.5%; width:120px; --rot:6deg; animation-duration:16s;">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="reelMetal1" cx="35%" cy="35%" r="70%">
+          <stop offset="0%" stop-color="#d8d8de"/><stop offset="100%" stop-color="#63636d"/>
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="46" fill="url(#reelMetal1)"/>
+      <circle cx="50" cy="50" r="10" fill="#211d28"/>
+      <circle cx="50" cy="24" r="9" fill="#211d28"/>
+      <circle cx="50" cy="76" r="9" fill="#211d28"/>
+      <circle cx="26" cy="37" r="9" fill="#211d28"/>
+      <circle cx="74" cy="37" r="9" fill="#211d28"/>
+      <circle cx="26" cy="63" r="9" fill="#211d28"/>
+      <circle cx="74" cy="63" r="9" fill="#211d28"/>
+    </svg>
+  </div>
+
+  <div class="prop edge-only" style="top:16%; right:1.5%; width:150px; --rot:8deg; animation-duration:15s;">
+    <svg viewBox="0 0 100 46" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lensL1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ea5850"/><stop offset="100%" stop-color="#7a1e1a"/>
+        </linearGradient>
+        <linearGradient id="lensR1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#5fc8d6"/><stop offset="100%" stop-color="#1c5c66"/>
+        </linearGradient>
+      </defs>
+      <path d="M2 8 q0 -8 10 -8 h24 q10 0 10 8 v22 q0 8 -10 8 h-24 q-10 0 -10 -8 Z" fill="#161119"/>
+      <rect x="10" y="6" width="28" height="26" rx="7" fill="url(#lensL1)"/>
+      <path d="M54 8 q0 -8 10 -8 h24 q10 0 10 8 v22 q0 8 -10 8 h-24 q-10 0 -10 -8 Z" fill="#161119"/>
+      <rect x="62" y="6" width="28" height="26" rx="7" fill="url(#lensR1)"/>
+      <rect x="46" y="14" width="8" height="6" fill="#161119"/>
+    </svg>
+  </div>
+
+  <div class="prop edge-only" style="top:62%; right:1%; width:150px; --rot:-6deg; animation-duration:17s;">
+    <svg viewBox="0 0 160 70" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ticketBg1" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#F2EFE9"/><stop offset="100%" stop-color="#d9d3c6"/>
+        </linearGradient>
+      </defs>
+      <path d="M6 10 h148 a8 8 0 0 1 8 8 v6 a7 7 0 0 0 0 22 v6 a8 8 0 0 1 -8 8 H6 a8 8 0 0 1 -8 -8 v-6 a7 7 0 0 0 0-22 v-6 a8 8 0 0 1 8 -8Z" fill="url(#ticketBg1)"/>
+      <line x1="112" y1="10" x2="112" y2="60" stroke="#a89f8c" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <rect x="16" y="22" width="70" height="6" rx="3" fill="#C1443A"/>
+      <rect x="16" y="34" width="48" height="5" rx="2.5" fill="#a89f8c"/>
+      <path d="M126 30 l3 8 8 1 -6 5 2 8 -7 -4 -7 4 2 -8 -6 -5 8 -1z" fill="#E8B04B"/>
+    </svg>
+  </div>
+
+  <div class="prop edge-only" style="top:36%; left:1%; width:100px; --rot:-4deg; animation-duration:14s;">
+    <svg viewBox="0 0 80 110" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cupBody1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ea5850"/><stop offset="100%" stop-color="#a8241d"/>
+        </linearGradient>
+      </defs>
+      <path d="M14 26 h52 l-8 74 a6 6 0 0 1 -6 5 H28 a6 6 0 0 1 -6 -5 Z" fill="url(#cupBody1)"/>
+      <rect x="10" y="14" width="60" height="14" rx="4" fill="#F2EFE9"/>
+      <rect x="34" y="0" width="8" height="18" rx="3" fill="#F2EFE9" transform="rotate(18 38 9)"/>
+      <path d="M22 26 h36" stroke="#F2EFE9" stroke-width="4" opacity="0.55"/>
+    </svg>
+  </div>
+
+  <div class="prop" style="top:5%; right:24%; width:26px; color:var(--marquee); animation-duration:9s;">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg>
+  </div>
+  <div class="prop" style="bottom:8%; left:22%; width:20px; color:var(--c8); animation-duration:11s;">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg>
+  </div>
+</div>
+
+<div class="backdrop">
+  <img src="/uploads/posters/movie-1.jpg" alt="">
+  <img src="/uploads/posters/movie-6.jpg" alt="">
+  <img src="/uploads/posters/movie-3.jpg" alt="">
+  <img src="/uploads/posters/movie-8.jpg" alt="">
+  <img src="/uploads/posters/movie-2.jpg" alt="">
+  <img src="/uploads/posters/movie-9.jpg" alt="">
+  <img src="/uploads/posters/movie-7.jpg" alt="">
+  <img src="/uploads/posters/movie-15.jpg" alt="">
+</div>
+<div class="scrim"></div>
+<span class="glow-ring g1"></span>
+<span class="glow-ring g2"></span>
+<span class="glow-ring g3"></span>
+
 <div class="ticket">
   <div class="ticket-top">
+    <div class="bulb-strip"></div>
     <h1>Cinema<span>DB</span></h1>
     <p>Sign in to continue</p>
   </div>
@@ -193,7 +421,13 @@ form.addEventListener("submit", async (e) => {
     feedback.textContent = "Login successful — redirecting…";
     feedback.className = "ok";
     sessionStorage.setItem("cinemadb_user", data.Username);
-    setTimeout(() => { window.location.href = "/index.html"; }, 600);
+    sessionStorage.setItem("cinemadb_just_logged_in", "1");
+
+    // Sweep the curtains closed over the login form, then hand off to
+    // index.html — which opens them again on arrival for a continuous
+    // "walking into the theatre" moment.
+    document.getElementById("curtain").classList.add("closed");
+    setTimeout(() => { window.location.href = "/index.html"; }, 750);
   } catch (err) {
     feedback.textContent = err.message;
     feedback.className = "error";

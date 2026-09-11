@@ -10,29 +10,132 @@
   --stub:#C1443A;
   --ok:#6FAE8C;
   --radius: 3px;
+
+  /* Neon-marquee accent set — used to color-code each section,
+     like the different bulb colors on a real theatre marquee */
+  --c1:#E8B04B; /* gold   — movies    */
+  --c2:#4FB6C4; /* teal   — theatres  */
+  --c3:#C1443A; /* red    — screens   */
+  --c4:#D97BC9; /* pink   — shows     */
+  --c5:#8E8BE8; /* violet — actors    */
+  --c6:#6FAE8C; /* mint   — directors */
+  --c7:#E88C4F; /* amber  — producers */
+  --c8:#5FB0E8; /* sky    — customers */
+  --c9:#E8C94F; /* yellow — bookings  */
+  --c10:#E85D8E; /* rose  — payments  */
 }
 *{box-sizing:border-box;}
 body{
   margin:0;
-  background:var(--ink);
+  position:relative;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(232,176,74,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 800px 600px at 100% 20%, rgba(193,68,58,0.05) 0%, transparent 55%),
+    radial-gradient(circle, rgba(242,239,233,0.035) 1px, transparent 1.4px) 0 0/26px 26px,
+    var(--ink);
   color:var(--paper);
   font-family:'Inter', sans-serif;
   line-height:1.5;
+  min-height:100vh;
+  overflow-x:hidden;
 }
+/* Floating colour blobs — like stage lighting gels drifting behind the content.
+   Fixed + pointer-events:none so they never interfere with layout or clicks. */
+.glow-field{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.glow-field span{
+  position:absolute;
+  border-radius:50%;
+  filter: blur(70px);
+  opacity:0.28;
+  animation: driftBlob 24s ease-in-out infinite alternate;
+}
+.glow-field span:nth-child(1){ width:340px; height:340px; background:var(--c1); top:-8%; left:-6%; }
+.glow-field span:nth-child(2){ width:280px; height:280px; background:var(--c4); top:40%; right:-8%; animation-duration:30s; }
+.glow-field span:nth-child(3){ width:260px; height:260px; background:var(--c2); bottom:-10%; left:20%; animation-duration:34s; }
+.glow-field span:nth-child(4){ width:220px; height:220px; background:var(--c8); top:10%; right:25%; animation-duration:20s; }
+@keyframes driftBlob{
+  from{ transform: translate(0,0) scale(1); }
+  to  { transform: translate(3%, 4%) scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce){
+  .glow-field span{ animation:none; }
+}
+header.marquee, nav.tabs, main, footer{ position:relative; z-index:1; }
 h1,h2,h3{
   font-family:'Fraunces', serif;
   font-weight:600;
   margin:0;
 }
 
+/* ---------- Motion ---------- */
+@keyframes bulbsOn{
+  0%   { background-position: 0 top; opacity:0; }
+  40%  { opacity:1; }
+  100% { background-position: 0 top; opacity:1; }
+}
+@keyframes marqueeGlow{
+  0%, 100% { text-shadow: 0 0 0 rgba(232,176,74,0); }
+  50%      { text-shadow: 0 0 18px rgba(232,176,74,0.35); }
+}
+@keyframes riseIn{
+  from{ opacity:0; transform: translateY(10px); }
+  to  { opacity:1; transform: translateY(0); }
+}
+@keyframes stampIn{
+  from{ opacity:0; transform: scale(0.92); }
+  to  { opacity:1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
 /* Marquee header */
-header.marquee{
-  padding: 2.2rem 2rem 1.8rem;
+/* ---------- Theatre marquee bulbs (chasing lights) ---------- */
+@keyframes bulbChase{
+  from{ background-position-x: 0; }
+  to  { background-position-x: 26px; }
+}
+.bulb-strip{
+  height:10px;
   background:
-    repeating-linear-gradient(90deg, var(--marquee) 0 2px, transparent 2px 22px) top / 100% 6px no-repeat,
-    var(--surface);
+    repeating-radial-gradient(circle, var(--marquee) 0 2.6px, transparent 3px 26px) left / 26px 10px repeat-x;
+  filter: drop-shadow(0 0 4px rgba(232,176,74,0.8));
+  animation: bulbChase 1s linear infinite;
+}
+@media (prefers-reduced-motion: reduce){
+  .bulb-strip{ animation:none; }
+}
+
+header.marquee{
+  position:relative;
+  padding: 2.2rem 2rem 1.8rem;
+  background: var(--surface);
   border-bottom: 1px solid var(--line);
   text-align:center;
+  overflow:hidden;
+  animation: bulbsOn 1.1s ease-out;
+}
+header.marquee > .bulb-strip{
+  position:absolute; top:0; left:0; right:0;
+}
+/* sprocket-hole film-strip texture along the very top edge */
+header.marquee::before{
+  content:"";
+  position:absolute;
+  top:0; left:0; right:0; height:10px;
+  background: repeating-radial-gradient(circle, var(--ink) 0 2.5px, transparent 2.6px 20px) top / 20px 10px repeat-x;
+  opacity:0.5;
 }
 header.marquee a.brand{
   text-decoration:none;
@@ -41,6 +144,7 @@ header.marquee h1{
   font-size: clamp(1.8rem, 5vw, 3rem);
   letter-spacing: 0.01em;
   color: var(--paper);
+  animation: marqueeGlow 4.5s ease-in-out 1.1s infinite;
 }
 header.marquee h1 span{ color: var(--marquee); }
 header.marquee p{
@@ -71,7 +175,20 @@ nav.tabs a{
   cursor:pointer;
   text-decoration:none;
   position:relative;
+  overflow:hidden;
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
 }
+nav.tabs a::before{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:0; height:2px;
+  background: var(--marquee);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+nav.tabs a:hover{ transform: translateY(-1px); border-color: rgba(232,176,74,0.4); }
+nav.tabs a:hover::before{ transform: scaleX(1); }
 nav.tabs a::after{
   content:"";
   position:absolute;
@@ -85,7 +202,10 @@ nav.tabs a.active{
   background: var(--stub);
   border-color: var(--stub);
   color: var(--paper);
+  animation: stampIn 0.3s ease;
 }
+nav.tabs a.active::before{ display:none; }
+nav.tabs a.active:hover{ transform:none; }
 
 main{
   max-width: 1100px;
@@ -126,6 +246,11 @@ tbody td{
   color: rgba(242,239,233,0.9);
 }
 tbody tr:hover{ background: rgba(232,176,74,0.05); }
+tbody tr{
+  animation: riseIn 0.35s ease both;
+  animation-delay: calc(var(--row-i, 0) * 35ms);
+  transition: background 0.15s ease;
+}
 
 .state-msg{
   padding: 2rem 0;
@@ -180,8 +305,11 @@ form.entry-form button{
   font-size: 0.9rem;
   cursor:pointer;
   font-family:'Inter', sans-serif;
+  transition: background 0.15s ease, transform 0.1s ease;
 }
-form.entry-form button:hover{ background: #f0c168; }
+form.entry-form button:hover{ background: #f0c168; transform: translateY(-1px); }
+form.entry-form button:active{ transform: translateY(0) scale(0.97); }
+.form-feedback.ok, .form-feedback.error{ animation: riseIn 0.25s ease; }
 .form-feedback{
   grid-column: 1/-1;
   font-size: 0.85rem;
@@ -201,12 +329,26 @@ form.entry-form button:hover{ background: #f0c168; }
   display:block;
   background: var(--surface);
   border: 1px solid var(--line);
+  border-top: 3px solid var(--card-color, var(--marquee));
   border-radius: var(--radius);
   padding: 1.4rem;
   text-decoration:none;
   color: var(--paper);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  animation: riseIn 0.4s ease both;
+  animation-delay: calc(var(--card-i, 0) * 45ms);
 }
-.link-card:hover{ border-color: var(--marquee); }
+.link-card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.4), 0 0 0 1px var(--card-color, var(--marquee)) inset;
+}
+.link-card .card-icon{
+  width: 30px; height: 30px;
+  color: var(--card-color, var(--marquee));
+  margin-bottom: 0.7rem;
+  transition: transform 0.25s ease;
+}
+.link-card:hover .card-icon{ transform: scale(1.12) rotate(-4deg); }
 .link-card h3{ font-size: 1.15rem; margin-bottom: 0.4rem; }
 .link-card p{
   margin:0;
@@ -214,7 +356,145 @@ form.entry-form button:hover{ background: #f0c168; }
   color: rgba(242,239,233,0.6);
 }
 
+/* ---------- Homepage poster collage hero ---------- */
+.poster-hero{
+  position:relative;
+  margin: 1.5rem 0 2rem;
+  border-radius: var(--radius);
+  overflow:hidden;
+  border: 1px solid var(--line);
+  min-height: 220px;
+  display:flex;
+  align-items:center;
+  background: var(--surface);
+}
+.poster-hero .collage{
+  position:absolute;
+  inset:0;
+  display:grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap:2px;
+}
+.poster-hero .collage img{
+  width:100%; height:100%;
+  object-fit:cover;
+  filter: saturate(1.15);
+  animation: panSlow 18s ease-in-out infinite alternate;
+}
+.poster-hero .collage img:nth-child(even){ animation-duration: 22s; }
+.poster-hero .scrim{
+  position:absolute; inset:0;
+  background: linear-gradient(100deg, rgba(20,16,25,0.94) 0%, rgba(20,16,25,0.75) 40%, rgba(20,16,25,0.35) 100%);
+}
+.poster-hero .hero-copy{
+  position:relative;
+  padding: 1.8rem 2rem;
+  max-width: 46ch;
+}
+.poster-hero .hero-copy h2{
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+.poster-hero .hero-copy p{
+  margin-top:0.5rem;
+  color: rgba(242,239,233,0.75);
+  font-size:0.92rem;
+}
+@keyframes panSlow{
+  from{ transform: scale(1.08) translate(0,0); }
+  to  { transform: scale(1.14) translate(-2%, -1%); }
+}
+@media (max-width: 640px){
+  .poster-hero .collage{ grid-template-columns: repeat(5, 1fr); }
+}
+
+/* Live stats strip */
+.stat-strip{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap:0.9rem;
+  margin: 1.6rem 0 2rem;
+}
+.stat-card{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  text-align:center;
+  animation: riseIn 0.4s ease both;
+  animation-delay: calc(var(--stat-i, 0) * 60ms);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card:hover{ transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.35); }
+.stat-card .num{
+  font-family:'Fraunces', serif;
+  font-size: 1.9rem;
+  font-weight:700;
+  color: var(--stat-color, var(--marquee));
+  line-height:1;
+}
+.stat-card .lbl{
+  margin-top:0.35rem;
+  font-size:0.75rem;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  color: rgba(242,239,233,0.55);
+}
+
 @media (max-width: 640px){
   form.entry-form{ grid-template-columns: 1fr; }
   nav.tabs{ justify-content:flex-start; overflow-x:auto; padding-bottom:0.5rem; }
+}
+
+/* ---------- Curtain transition (login → home) ---------- */
+.curtain{
+  position:fixed; inset:0; z-index:200;
+  display:flex;
+  pointer-events:none;
+}
+.curtain .panel{
+  flex:1 1 50%;
+  background:
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.22) 0 16px, rgba(0,0,0,0.02) 16px 32px),
+    linear-gradient(180deg, #8a1c28 0%, #5a0f18 55%, #2c0810 100%);
+  box-shadow: inset 0 0 90px rgba(0,0,0,0.65);
+  transition: transform 0.8s cubic-bezier(.65,0,.35,1);
+}
+.curtain .panel.left{
+  transform: translateX(-100%);
+  border-right: 3px solid rgba(232,176,74,0.55);
+}
+.curtain .panel.right{
+  transform: translateX(100%);
+  border-left: 3px solid rgba(232,176,74,0.55);
+}
+.curtain.closed .panel.left{ transform: translateX(0); }
+.curtain.closed .panel.right{ transform: translateX(0); }
+@media (prefers-reduced-motion: reduce){
+  .curtain .panel{ transition:none; }
+}
+
+/* ---------- Floating theatre props (popcorn, 3D glasses, etc.) ---------- */
+.prop-field{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.prop{
+  position:absolute;
+  opacity:0.5;
+  animation: floatProp 13s ease-in-out infinite;
+}
+.prop svg{ width:100%; height:auto; display:block; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.45)); }
+@keyframes floatProp{
+  0%, 100%{ transform: translateY(0) rotate(var(--rot, 0deg)); }
+  50%     { transform: translateY(-16px) rotate(calc(var(--rot, 0deg) + 5deg)); }
+}
+@media (prefers-reduced-motion: reduce){
+  .prop{ animation:none; }
+}
+@media (max-width: 1100px){
+  /* hide the ones that would overlap narrow/mobile content */
+  .prop.edge-only{ display:none; }
 }

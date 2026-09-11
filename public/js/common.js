@@ -22,8 +22,8 @@ function renderTable(wrapId, rows){
   }
   const cols = Object.keys(rows[0]);
   const thead = `<thead><tr>${cols.map(c => `<th>${c.replace(/_/g," ")}</th>`).join("")}</tr></thead>`;
-  const tbody = `<tbody>${rows.map(r =>
-    `<tr>${cols.map(c => `<td>${r[c] === null || r[c] === undefined ? "—" : r[c]}</td>`).join("")}</tr>`
+  const tbody = `<tbody>${rows.map((r, i) =>
+    `<tr style="--row-i:${Math.min(i, 20)}">${cols.map(c => `<td>${r[c] === null || r[c] === undefined ? "—" : r[c]}</td>`).join("")}</tr>`
   ).join("")}</tbody>`;
   wrap.innerHTML = `<table>${thead}${tbody}</table>`;
 }

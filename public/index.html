@@ -8,7 +8,111 @@
 </head>
 <body>
 
+<div class="curtain closed" id="curtain" style="display:none">
+  <div class="panel left"></div>
+  <div class="panel right"></div>
+</div>
+
+<div class="glow-field"><span></span><span></span><span></span><span></span></div>
+
+<div class="prop-field">
+  <div class="prop edge-only" style="top:8%; left:1%; width:150px; --rot:-8deg;">
+    <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="popKernel1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fff6d8"/><stop offset="100%" stop-color="#e8c46a"/>
+        </linearGradient>
+        <linearGradient id="popBucket1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#e8453a"/><stop offset="100%" stop-color="#a8241d"/>
+        </linearGradient>
+      </defs>
+      <path d="M20 55 L80 55 L72 125 L28 125 Z" fill="url(#popBucket1)"/>
+      <path d="M32 55 L38 125 L48 125 L44 55 Z" fill="#F2EFE9" opacity="0.92"/>
+      <path d="M56 55 L60 125 L70 125 L64 55 Z" fill="#F2EFE9" opacity="0.92"/>
+      <circle cx="30" cy="50" r="14" fill="url(#popKernel1)"/>
+      <circle cx="50" cy="36" r="18" fill="url(#popKernel1)"/>
+      <circle cx="70" cy="50" r="14" fill="url(#popKernel1)"/>
+      <circle cx="40" cy="55" r="12" fill="url(#popKernel1)"/>
+      <circle cx="60" cy="55" r="12" fill="url(#popKernel1)"/>
+      <circle cx="50" cy="59" r="10" fill="url(#popKernel1)"/>
+    </svg>
+  </div>
+
+  <div class="prop edge-only" style="top:56%; left:1.5%; width:120px; --rot:6deg; animation-duration:16s;">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="reelMetal1" cx="35%" cy="35%" r="70%">
+          <stop offset="0%" stop-color="#d8d8de"/><stop offset="100%" stop-color="#63636d"/>
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="46" fill="url(#reelMetal1)"/>
+      <circle cx="50" cy="50" r="10" fill="#211d28"/>
+      <circle cx="50" cy="24" r="9" fill="#211d28"/>
+      <circle cx="50" cy="76" r="9" fill="#211d28"/>
+      <circle cx="26" cy="37" r="9" fill="#211d28"/>
+      <circle cx="74" cy="37" r="9" fill="#211d28"/>
+      <circle cx="26" cy="63" r="9" fill="#211d28"/>
+      <circle cx="74" cy="63" r="9" fill="#211d28"/>
+    </svg>
+  </div>
+
+  <div class="prop edge-only" style="top:16%; right:1.5%; width:150px; --rot:8deg; animation-duration:15s;">
+    <svg viewBox="0 0 100 46" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lensL1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ea5850"/><stop offset="100%" stop-color="#7a1e1a"/>
+        </linearGradient>
+        <linearGradient id="lensR1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#5fc8d6"/><stop offset="100%" stop-color="#1c5c66"/>
+        </linearGradient>
+      </defs>
+      <path d="M2 8 q0 -8 10 -8 h24 q10 0 10 8 v22 q0 8 -10 8 h-24 q-10 0 -10 -8 Z" fill="#161119"/>
+      <rect x="10" y="6" width="28" height="26" rx="7" fill="url(#lensL1)"/>
+      <path d="M54 8 q0 -8 10 -8 h24 q10 0 10 8 v22 q0 8 -10 8 h-24 q-10 0 -10 -8 Z" fill="#161119"/>
+      <rect x="62" y="6" width="28" height="26" rx="7" fill="url(#lensR1)"/>
+      <rect x="46" y="14" width="8" height="6" fill="#161119"/>
+    </svg>
+  </div>
+
+  <div class="prop edge-only" style="top:62%; right:1%; width:150px; --rot:-6deg; animation-duration:17s;">
+    <svg viewBox="0 0 160 70" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ticketBg1" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#F2EFE9"/><stop offset="100%" stop-color="#d9d3c6"/>
+        </linearGradient>
+      </defs>
+      <path d="M6 10 h148 a8 8 0 0 1 8 8 v6 a7 7 0 0 0 0 22 v6 a8 8 0 0 1 -8 8 H6 a8 8 0 0 1 -8 -8 v-6 a7 7 0 0 0 0-22 v-6 a8 8 0 0 1 8 -8Z" fill="url(#ticketBg1)"/>
+      <line x1="112" y1="10" x2="112" y2="60" stroke="#a89f8c" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <rect x="16" y="22" width="70" height="6" rx="3" fill="#C1443A"/>
+      <rect x="16" y="34" width="48" height="5" rx="2.5" fill="#a89f8c"/>
+      <path d="M126 30 l3 8 8 1 -6 5 2 8 -7 -4 -7 4 2 -8 -6 -5 8 -1z" fill="#E8B04B"/>
+    </svg>
+  </div>
+
+  <div class="prop edge-only" style="top:36%; left:1%; width:100px; --rot:-4deg; animation-duration:14s;">
+    <svg viewBox="0 0 80 110" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cupBody1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ea5850"/><stop offset="100%" stop-color="#a8241d"/>
+        </linearGradient>
+      </defs>
+      <path d="M14 26 h52 l-8 74 a6 6 0 0 1 -6 5 H28 a6 6 0 0 1 -6 -5 Z" fill="url(#cupBody1)"/>
+      <rect x="10" y="14" width="60" height="14" rx="4" fill="#F2EFE9"/>
+      <rect x="34" y="0" width="8" height="18" rx="3" fill="#F2EFE9" transform="rotate(18 38 9)"/>
+      <path d="M22 26 h36" stroke="#F2EFE9" stroke-width="4" opacity="0.55"/>
+    </svg>
+  </div>
+
+  <div class="prop" style="top:5%; right:24%; width:26px; color:var(--marquee); animation-duration:9s;">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg>
+  </div>
+  <div class="prop" style="bottom:8%; left:22%; width:20px; color:var(--c8); animation-duration:11s;">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg>
+  </div>
+</div>
+
 <header class="marquee">
+  <div class="bulb-strip"></div>
   <h1>Cinema<span>DB</span></h1>
   <p>Live view of the box office database</p>
 </header>
@@ -37,44 +141,65 @@
     Pick a section below to view its records.
   </p>
 
+  <div class="poster-hero" id="poster-hero">
+    <div class="collage" id="poster-collage"></div>
+    <div class="scrim"></div>
+    <div class="hero-copy">
+      <h2>Now showing across the database</h2>
+      <p>Every poster below was uploaded through the Movies page — live from your own catalogue.</p>
+    </div>
+  </div>
+
+  <div class="stat-strip" id="stat-strip"></div>
+
   <div class="link-grid">
-    <a class="link-card" href="/movies.html">
+    <a class="link-card" href="/movies.html" style="--card-i:0; --card-color:var(--c1)">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="4" width="19" height="16" rx="1"/><path d="M2.5 8h19M7 4v4M17 4v4M7 16v4M17 16v4"/></svg>
       <h3>Movies</h3>
       <p>Browse the film catalogue, with posters and cast &amp; crew.</p>
     </a>
-    <a class="link-card" href="/theatres.html">
+    <a class="link-card" href="/theatres.html" style="--card-i:1; --card-color:var(--c2)">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 21V9l8-5 8 5v12"/><path d="M9 21v-6h6v6"/></svg>
       <h3>Theatres</h3>
       <p>All registered theatre locations.</p>
     </a>
-    <a class="link-card" href="/screens.html">
+    <a class="link-card" href="/screens.html" style="--card-i:2; --card-color:var(--c3)">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="4.5" width="19" height="12" rx="1"/><path d="M8.5 20.5h7M12 16.5v4"/></svg>
       <h3>Screens</h3>
       <p>Screens belonging to each theatre.</p>
     </a>
-    <a class="link-card" href="/shows.html">
+    <a class="link-card" href="/shows.html" style="--card-i:3; --card-color:var(--c4)">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4.5" width="18" height="16" rx="1"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><circle cx="8" cy="14" r="1"/><circle cx="12" cy="14" r="1"/><circle cx="16" cy="14" r="1"/></svg>
       <h3>Shows</h3>
       <p>Scheduled screenings by screen and theatre.</p>
     </a>
-    <a class="link-card" href="/actors.html">
+    <a class="link-card" href="/actors.html" style="--card-i:4; --card-color:var(--c5)">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.4"/><path d="M4.5 20.5c1-4 4-6 7.5-6s6.5 2 7.5 6"/></svg>
       <h3>Actors</h3>
       <p>Cast members across all movies.</p>
     </a>
-    <a class="link-card" href="/directors.html">
+    <a class="link-card" href="/directors.html" style="--card-i:5; --card-color:var(--c6)">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6l17-2 1 4-17.5 2.3z"/><rect x="3" y="10" width="18" height="10" rx="1"/></svg>
       <h3>Directors</h3>
       <p>Directors linked to movies.</p>
     </a>
-    <a class="link-card" href="/producers.html">
+    <a class="link-card" href="/producers.html" style="--card-i:6; --card-color:var(--c7)">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="7.5" width="19" height="12.5" rx="1"/><path d="M8 7.5V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1.5"/></svg>
       <h3>Producers</h3>
       <p>Producers and their production houses.</p>
     </a>
-    <a class="link-card" href="/customers.html">
+    <a class="link-card" href="/customers.html" style="--card-i:7; --card-color:var(--c8)">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3"/><path d="M2.5 20c0.8-3.5 3.2-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17" cy="8.5" r="2.2"/><path d="M16 14.6c2.6.3 4.2 2 4.9 4.9"/></svg>
       <h3>Customers</h3>
       <p>Registered customer records.</p>
     </a>
-    <a class="link-card" href="/bookings.html">
+    <a class="link-card" href="/bookings.html" style="--card-i:8; --card-color:var(--c9)">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M14 6v12" stroke-dasharray="2.5 2.5"/></svg>
       <h3>Bookings</h3>
       <p>View bookings and create a new one.</p>
     </a>
-    <a class="link-card" href="/payments.html">
+    <a class="link-card" href="/payments.html" style="--card-i:9; --card-color:var(--c10)">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="5.5" width="19" height="13" rx="1.5"/><path d="M2.5 10h19"/><path d="M6 15h4"/></svg>
       <h3>Payments</h3>
       <p>Payment records linked to bookings.</p>
     </a>
@@ -82,6 +207,94 @@
 </main>
 
 <script src="/js/auth.js"></script>
+<script>
+  // If we just came from a successful login, open the curtain over the
+  // already-rendered homepage — a one-time "walking into the theatre"
+  // reveal. Regular nav clicks (no flag set) skip this entirely.
+  (function curtainOpen() {
+    if (sessionStorage.getItem("cinemadb_just_logged_in") !== "1") return;
+    sessionStorage.removeItem("cinemadb_just_logged_in");
+
+    const curtain = document.getElementById("curtain");
+    if (!curtain) return;
+    curtain.style.display = "flex";
+    document.body.style.overflow = "hidden";
+
+    // force a paint with the curtain closed, then open it
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        curtain.classList.remove("closed");
+        setTimeout(() => {
+          curtain.remove();
+          document.body.style.overflow = "";
+        }, 850);
+      });
+    });
+  })();
+</script>
+<script>
+  // Live counts pulled from each API endpoint — real numbers, not placeholders
+  (async function loadStats() {
+    const el = document.getElementById("stat-strip");
+    if (!el) return;
+    const endpoints = [
+      { url: "/api/movies",    label: "Movies",    color: "var(--c1)" },
+      { url: "/api/theatres",  label: "Theatres",  color: "var(--c2)" },
+      { url: "/api/shows",     label: "Shows",     color: "var(--c4)" },
+      { url: "/api/customers", label: "Customers", color: "var(--c8)" },
+      { url: "/api/bookings",  label: "Bookings",  color: "var(--c9)" },
+      { url: "/api/payments",  label: "Payments",  color: "var(--c10)" }
+    ];
+    try {
+      const results = await Promise.all(
+        endpoints.map(e => fetch(e.url).then(r => r.ok ? r.json() : []).catch(() => []))
+      );
+      el.innerHTML = endpoints.map((e, i) => `
+        <div class="stat-card" style="--stat-i:${i}; --stat-color:${e.color}">
+          <div class="num">${results[i].length}</div>
+          <div class="lbl">${e.label}</div>
+        </div>
+      `).join("");
+    } catch (err) {
+      console.error(err);
+      el.style.display = "none";
+    }
+  })();
+</script>
+
+<script>
+  // Populate the homepage poster collage with real posters from the database
+  (async function loadPosterHero() {
+    const collage = document.getElementById("poster-collage");
+    const hero = document.getElementById("poster-hero");
+    if (!collage) return;
+    try {
+      const res = await fetch("/api/movies");
+      if (!res.ok) throw new Error("Failed to load movies");
+      const movies = await res.json();
+
+      const withPosters = movies.filter(m => m.Poster);
+      if (withPosters.length === 0) {
+        hero.style.display = "none"; // no posters yet — hide the hero rather than show a blank collage
+        return;
+      }
+
+      // repeat/trim to a fixed tile count so the collage grid always fills nicely
+      const TILE_COUNT = 10;
+      const tiles = [];
+      for (let i = 0; i < TILE_COUNT; i++) {
+        tiles.push(withPosters[i % withPosters.length]);
+      }
+
+      collage.innerHTML = tiles.map(m =>
+        `<img src="${m.Poster}" alt="${m.Title}" loading="lazy">`
+      ).join("");
+    } catch (err) {
+      console.error(err);
+      if (hero) hero.style.display = "none";
+    }
+  })();
+</script>
 
 </body>
 </html>
